@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>국방 모집병 정보 RAG | 이찬식 Portfolio</title>
+  <meta name="description" content="이찬식 데이터 분석가 포트폴리오">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../../index.html">이찬식</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="../../index.html">Home</a>
+<a href="../../projects/index.html">Projects</a>
+<a href="../../about/index.html">About</a>
+<a href="../../resume/index.html">Resume</a>
+<a href="../../writing/index.html">Writing</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    
+<section class="hero">
+  <div class="eyebrow">RAG and Public Service Idea</div>
+  <h1 class="project-title">국방 모집병 정보 RAG 챗봇</h1>
+  <p>
+    예비용사들이 모집병 정보를 찾기 어렵다는 문제를 바탕으로, 병무청 모집병 정보를 문서 DB화하고
+    자연어 질문으로 지원 자격, 제출 서류, 커트라인 등을 확인할 수 있는 RAG 챗봇 서비스를 제안했습니다.
+  </p>
+  <div class="project-meta">
+    <span class="tag">RAG</span><span class="tag">LangChain</span><span class="tag">LangGraph</span>
+    <span class="tag">BM25</span><span class="tag">FAISS</span><span class="tag">FastAPI</span>
+  </div>
+</section>
+
+<section class="section">
+  <h2>역할</h2>
+  <div class="card">
+    <ul>
+      <li>모집병 정보 탐색의 어려움을 문제로 제시하고, RAG 챗봇이라는 해결책을 기획했습니다.</li>
+      <li>RAG 모델이 사용할 문서 DB 구축을 위해 모집병 정보 문서를 수집했습니다.</li>
+      <li>LangChain과 Hugging Face 모델 기반 문서 청킹, 벡터 임베딩 구상에 참여했습니다.</li>
+      <li>AI 시스템 개발 과정에서 문서 검색과 답변 생성 구조를 이해하고 구현 방향을 함께 논의했습니다.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <h2>기능 구조</h2>
+  <div class="grid two">
+    <div class="card">
+      <h3>검색 구조</h3>
+      <p>키워드 기반 BM25와 의미 기반 FAISS 검색을 결합하고, LLM 리랭킹으로 관련 문서를 선별하는 구조를 사용했습니다.</p>
+    </div>
+    <div class="card">
+      <h3>서비스 구조</h3>
+      <p>FastAPI 기반 웹 인터페이스와 LangGraph 워크플로우를 활용해 질문 재작성, 하위 질문 생성, 문서 검색, 답변 생성을 연결했습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>성과</h2>
+  <div class="card">
+    <p>2025 병무청·방위사업청·질병관리청 합동 데이터 분석 및 아이디어 공모전에서 대상, 1위를 수상했습니다.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>링크</h2>
+  <div class="card">
+    <p><a href="https://github.com/Mizrhan/army_rag">GitHub Repository</a></p>
+  </div>
+</section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>이찬식</strong>
+        <p class="small">Data Analyst Portfolio</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:pouljone@naver.com">Email</a>
+        <a href="https://github.com/Mizrhan">GitHub</a>
+        <a href="https://huggingface.co/Mizrhan">Hugging Face</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marketing KPI | 이찬식 Portfolio</title>
+  <meta name="description" content="이찬식 데이터 분석가 포트폴리오">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../../index.html">이찬식</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="../../index.html">Home</a>
+<a href="../../projects/index.html">Projects</a>
+<a href="../../about/index.html">About</a>
+<a href="../../resume/index.html">Resume</a>
+<a href="../../writing/index.html">Writing</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    
+<section class="hero">
+  <div class="eyebrow">SQL and KPI</div>
+  <h1 class="project-title">Marketing KPI Performance Analysis</h1>
+  <p>
+    마케팅 성과를 매출 하나로 판단하지 않고, 비용, 수익, ROMI, ROAS를 함께 계산해
+    캠페인별로 중단할 것과 키울 것을 구분한 SQL 기반 분석 프로젝트입니다.
+  </p>
+  <div class="project-meta">
+    <span class="tag">SQL</span><span class="tag">DuckDB</span><span class="tag">KPI</span>
+    <span class="tag">ROMI</span><span class="tag">ROAS</span>
+  </div>
+</section>
+
+<section class="section">
+  <h2>분석 질문</h2>
+  <div class="grid three">
+    <div class="card">
+      <h3>일별 성과</h3>
+      <p>일자별 수익, 비용, 순이익률의 흐름이 안정적인지 확인했습니다.</p>
+    </div>
+    <div class="card">
+      <h3>카테고리별 성과</h3>
+      <p>마케팅 카테고리별 spend share, revenue share, ROMI, ROAS를 비교했습니다.</p>
+    </div>
+    <div class="card">
+      <h3>캠페인 진단</h3>
+      <p>캠페인 단위로 pause 후보와 scale 후보를 분리했습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>주요 결과</h2>
+  <div class="card">
+    <ul>
+      <li>평일과 주말의 순이익률 차이는 뚜렷하게 확인되지 않았습니다.</li>
+      <li>총비용과 총소득은 비례 관계를 보여 기본적인 수익 구조는 안정적으로 나타났습니다.</li>
+      <li>일 단위로는 흑자였지만, 순이익률 변동성이 크게 나타나 추가 원인 분석이 필요했습니다.</li>
+      <li>social 계열 마케팅에서 적자가 확인됐고, influencer 계열은 높은 순이익률과 총소득 비율을 보였습니다.</li>
+      <li>facebook_lal, facebook_tier2, google_wide는 pause 후보로, youtube_blogger, facebook_retargeting, instagram_tier1은 scale 후보로 정리했습니다.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <h2>링크</h2>
+  <div class="card">
+    <p><a href="https://github.com/Mizrhan/Marketing_KPI_Performance_Analysis">GitHub Repository</a></p>
+  </div>
+</section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>이찬식</strong>
+        <p class="small">Data Analyst Portfolio</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:pouljone@naver.com">Email</a>
+        <a href="https://github.com/Mizrhan">GitHub</a>
+        <a href="https://huggingface.co/Mizrhan">Hugging Face</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>서울시 아파트 가격 요인 분석 | 이찬식 Portfolio</title>
+  <meta name="description" content="이찬식 데이터 분석가 포트폴리오">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../../index.html">이찬식</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="../../index.html">Home</a>
+<a href="../../projects/index.html">Projects</a>
+<a href="../../about/index.html">About</a>
+<a href="../../resume/index.html">Resume</a>
+<a href="../../writing/index.html">Writing</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    
+<section class="hero">
+  <div class="eyebrow">Public Data and Model Interpretation</div>
+  <h1 class="project-title">서울시 아파트 가격 요인 분석</h1>
+  <p>
+    2022년에서 2023년 사이 주택 가격 하락기에도 지역별 가격 방어와 변동폭이 다르게 나타나는 이유를
+    공시가격 변화율과 실거래가격이라는 두 지표로 나누어 분석했습니다.
+  </p>
+  <div class="project-meta">
+    <span class="tag">XGBoost</span><span class="tag">GAM</span><span class="tag">SHAP</span>
+    <span class="tag">PDP</span><span class="tag">Geocoding</span>
+  </div>
+</section>
+
+<section class="section">
+  <h2>접근 방식</h2>
+  <div class="grid two">
+    <div class="card">
+      <h3>공시가격 변화율</h3>
+      <p>XGBoost 모델로 2022년 대비 2023년 공시가격 변화율에 영향을 주는 요인을 찾고, SHAP와 PDP로 해석했습니다.</p>
+    </div>
+    <div class="card">
+      <h3>실거래가격</h3>
+      <p>비선형 관계 해석에 강점이 있는 GAM을 활용하고, 가격대별로 영향 요인의 차이를 확인했습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>데이터와 전처리</h2>
+  <div class="card">
+    <ul>
+      <li>공간융합 빅데이터 플랫폼 데이터와 외부 수집 데이터를 함께 활용했습니다.</li>
+      <li>생활환경지수, 지형 특성, 접근성 지표, 거시경제 지표를 추가로 수집했습니다.</li>
+      <li>Google Geocoding과 최근접 거리 계산으로 이종 데이터를 위치 기준으로 병합했습니다.</li>
+      <li>지형, 인구 변화량, 전용면적별 가격 변화율 등 가설 기반 파생변수를 생성했습니다.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <h2>주요 결과</h2>
+  <div class="grid two">
+    <div class="card">
+      <h3>공시가격 변화율</h3>
+      <p>세대수, 동수, 인근 단지 표고 최고값이 중요한 요인으로 나타났고, XGBoost 모델은 RMSE 1.89%를 기록했습니다.</p>
+    </div>
+    <div class="card">
+      <h3>실거래가격</h3>
+      <p>GAM 모델은 MSE 0.06의 성능을 보였고, 저가 지역과 고가 지역에서 중요 요인이 다르게 나타났습니다.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px;">
+    <p>
+      두 모델 모두에서 교통 인프라, 특히 차량 접근성의 중요성이 확인되었습니다.
+      반면 공시가격은 단지 규모와 물리적 특성이, 실거래가격은 인구 구조와 생활 편의성, 자산 가치 성격이 가격대별로 다르게 작동했습니다.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>링크</h2>
+  <div class="card">
+    <p><a href="https://github.com/Mizrhan/Analaysis_Seoul_Apartment">GitHub Repository</a></p>
+  </div>
+</section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>이찬식</strong>
+        <p class="small">Data Analyst Portfolio</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:pouljone@naver.com">Email</a>
+        <a href="https://github.com/Mizrhan">GitHub</a>
+        <a href="https://huggingface.co/Mizrhan">Hugging Face</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
