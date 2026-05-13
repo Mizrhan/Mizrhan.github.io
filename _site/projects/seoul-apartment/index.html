@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seoul Apartment Price Factor Analysis | Mizrhan | Data Analyst Portfolio</title>
+  <meta name="description" content="Python · SQL · R · KPI · Dashboard · Machine Learning">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="/">Mizrhan</a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+        <a href="/resume/">Resume</a>
+        <a href="/writing/">Writing</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <div class="project-header">
+  <div class="eyebrow">Public Data · XGBoost · GAM · Model Interpretation</div>
+
+  # Seoul Apartment Price Factor Analysis
+
+  XGBoost와 GAM을 활용해 서울시 아파트 공시가격 변화율과 실거래가격의 영향 요인을 분석한 프로젝트입니다.
+</div>
+
+<h2 id="summary">Summary</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>내용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>목적</td>
+      <td>서울시 아파트 가격 변동 요인 분석과 예측</td>
+    </tr>
+    <tr>
+      <td>방법</td>
+      <td>XGBoost, GAM, SHAP, Geocoding</td>
+    </tr>
+    <tr>
+      <td>데이터</td>
+      <td>단지 정보, 가격 데이터, 인구통계, 인프라, 지형, 거시경제 지표</td>
+    </tr>
+    <tr>
+      <td>링크</td>
+      <td><a href="https://github.com/Mizrhan/Analaysis_Seoul_Apartment">GitHub Repository</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="problem">Problem</h2>
+
+<p>주택 가격은 단일 요인으로 설명하기 어렵습니다.<br />
+이 프로젝트는 공시가격 변화율과 실거래가격에 영향을 주는 복합 요인을 분석하고, 가격대별로 어떤 특성이 다르게 작동하는지 확인했습니다.</p>
+
+<h2 id="my-role--contribution">My Role / Contribution</h2>
+
+<ul>
+  <li>공공/외부 데이터 결합 구조 정리</li>
+  <li>주소 기반 Geocoding을 통한 공간 정보 결합</li>
+  <li>결측치와 이상치 처리</li>
+  <li>XGBoost 기반 공시가격 변화율 예측</li>
+  <li>GAM 기반 실거래가격 예측과 비선형 관계 해석</li>
+  <li>SHAP 기반 주요 변수 해석</li>
+</ul>
+
+<h2 id="key-findings">Key Findings</h2>
+
+<ul>
+  <li>공시가격 변화율에는 단지 규모와 물리적 특성이 중요하게 나타났습니다.</li>
+  <li>실거래가격에서는 인구 구조, 생활 편의성, 자산 가치 성격이 가격대별로 다르게 작동했습니다.</li>
+  <li>교통 인프라, 특히 차량 접근성은 두 모델에서 공통적으로 중요한 요인으로 확인되었습니다.</li>
+</ul>
+
+<h2 id="limitations">Limitations</h2>
+
+<ul>
+  <li>일부 데이터는 라이선스 문제로 저장소에 포함되지 않습니다.</li>
+  <li>공공 데이터의 기준 시점과 수집 방식 차이가 있어 해석 시 주의가 필요합니다.</li>
+</ul>
+
+<h2 id="portfolio-note">Portfolio Note</h2>
+
+<p>이 프로젝트는 공공 데이터, 공간 데이터, 모델 해석을 보여주기 좋습니다.<br />
+다만 데이터 분석가 포트폴리오에서는 너무 모델 중심으로 설명하지 말고, 정책/시장 해석 관점으로 정리하는 것이 좋습니다.</p>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>Mizrhan</strong>
+        <p>Data Analyst Portfolio</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/Mizrhan">GitHub</a>
+        <a href="mailto:YOUR_EMAIL@example.com">Email</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

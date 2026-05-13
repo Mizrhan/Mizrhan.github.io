@@ -370,3 +370,299 @@ hr {
     flex-direction: column;
   }
 }
+
+.profile-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr);
+  gap: 28px;
+  align-items: stretch;
+  padding: 44px 0 34px;
+}
+
+.profile-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 540px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: clamp(28px, 5vw, 54px);
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.15), transparent 22rem),
+    rgba(17, 24, 39, 0.66);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.18);
+}
+
+.profile-main h1 {
+  margin: 0 0 8px;
+  font-size: clamp(2.8rem, 7vw, 5.8rem);
+  line-height: 1;
+  letter-spacing: -0.07em;
+}
+
+.profile-role {
+  margin: 0 0 22px;
+  color: var(--accent);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.profile-intro {
+  max-width: 780px;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.6vw, 1.16rem);
+}
+
+.profile-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.profile-highlights span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 11px;
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  border-radius: 999px;
+  color: #dbeafe;
+  background: rgba(56, 189, 248, 0.08);
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.profile-card {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow: hidden;
+  background: rgba(17, 24, 39, 0.78);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.18);
+}
+
+.profile-photo-wrap {
+  aspect-ratio: 1 / 1;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.profile-info {
+  padding: 22px;
+}
+
+.info-group {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.info-group:first-child {
+  padding-top: 0;
+}
+
+.info-group:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.info-group h2 {
+  margin: 0 0 8px;
+  color: var(--white);
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.info-group p {
+  margin: 4px 0;
+  color: var(--muted);
+}
+
+.info-group a {
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .profile-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-main {
+    min-height: auto;
+  }
+
+  .profile-card {
+    display: block;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .profile-photo-wrap {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+  }
+
+  .profile-photo {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .profile-info {
+    min-width: 0;
+  }
+
+  .info-group p,
+  .info-group a {
+    overflow-wrap: anywhere;
+    word-break: keep-all;
+  }
+}
+
+@media (max-width: 620px) {
+  .profile-card {
+    max-width: 100%;
+  }
+
+  .profile-info {
+    padding: 18px;
+  }
+
+  .profile-main h1 {
+    font-size: clamp(2.8rem, 16vw, 4.4rem);
+  }
+}
+
+/* Profile hero layout override:
+   사진/기본정보 카드를 왼쪽, 소개 블럭을 오른쪽에 배치 */
+.profile-hero {
+  grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1.42fr);
+  grid-template-areas: "profile intro";
+  align-items: stretch;
+}
+
+.profile-card {
+  grid-area: profile;
+}
+
+.profile-main {
+  grid-area: intro;
+  min-height: auto;
+  justify-content: flex-start;
+}
+
+/* 소개 블럭이 너무 위에 붙지 않도록 약간의 안정적인 내부 여백 */
+.profile-main {
+  padding-top: clamp(34px, 5vw, 56px);
+}
+
+/* 태블릿 이하에서는 세로 배치 */
+@media (max-width: 900px) {
+  .profile-hero {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "profile"
+      "intro";
+  }
+
+  .profile-card {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .profile-main {
+    width: 100%;
+  }
+}
+
+@media (max-width: 620px) {
+  .profile-card {
+    max-width: 100%;
+  }
+}
+
+/* 오른쪽 소개 카드 안의 Contact / Channels 영역 */
+.profile-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 30px;
+  max-width: 640px;
+}
+
+.profile-contact-box {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.profile-contact-box h2 {
+  margin: 0 0 9px;
+  color: var(--white);
+  font-size: 0.86rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.profile-contact-box p {
+  margin: 5px 0;
+  color: var(--muted);
+}
+
+.profile-contact-box a {
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+/* 오른쪽 카드가 불필요하게 길게 늘어지는 느낌 완화 */
+.profile-hero {
+  align-items: start;
+}
+
+.profile-main {
+  align-self: start;
+}
+
+.profile-card {
+  align-self: start;
+}
+
+@media (max-width: 900px) {
+  .profile-contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 620px) {
+  .profile-contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.channel-links-separated {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+.channel-separator {
+  width: 1px;
+  height: 24px;
+  flex: 0 0 auto;
+  background: rgba(148, 163, 184, 0.55);
+}
