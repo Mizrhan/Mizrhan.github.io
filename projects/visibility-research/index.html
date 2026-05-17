@@ -28,7 +28,7 @@
   <h1 class="project-title">시정 예측 머신러닝·딥러닝 연구</h1>
   <p>
     대한민국 주요 도시의 시정 데이터를 예측하기 위해 기상 데이터와 대기질 데이터를 통합하고,
-    불균형 데이터와 분포 변화 문제를 모델링과 원인 분석 관점에서 다룬 프로젝트입니다.
+    불균형 데이터의 증강을 통해, 모델의 안정성을 높였습니다. 모델링 이후, 기존 모델과의 성능 비교와 일부 지역의 성능 하락 원인 분석까지 전과정을 다룬 프로젝트입니다.
   </p>
   <div class="project-meta">
     <span class="tag">ASOS</span><span class="tag">AirKorea</span><span class="tag">DataON</span>
@@ -41,33 +41,51 @@
   <h2>문제 정의</h2>
   <div class="card">
     <p>
-      낮은 시정은 교통, 항공, 해상 안전과 직접 연결되지만 데이터에서 자주 나타나는 범주는 아닙니다.
-      그래서 전체 정확도만 높이는 방식보다, 중요한 희소 구간을 얼마나 잘 잡는지가 더 중요했습니다.
-      프로젝트는 기상 데이터와 대기질 데이터를 결합해 시정 예측 성능을 높이고,
-      성능이 달라지는 지역과 연도의 원인을 설명하는 데 초점을 맞췄습니다.
+      시정불량은 교통, 항공, 해상 안전에 치명적이지만 흔하게 발생하는 이벤트는 아닙니다.
+      따라서 시정 범주 전체의 예측 정확도만 높이는 방식보다, 중요한 희소 구간을 얼마나 잘 잡는지가 더 중요합니다.
+      해당 프로젝트는 기상 데이터와 대기질 데이터를 결합해 시정 예측 성능을 높이고,
+      성능이 달라지는 지역의 원인을 설명하는 데 초점을 맞췄습니다.
     </p>
   </div>
 </section>
 
 <section class="section">
-  <h2>내 역할</h2>
+  <h2>역할</h2>
+  <p class="section-lead">
+    이 프로젝트에서는 데이터 병합 구조 설계, 불균형 데이터 증강 전략, 모델 구축,
+    그리고 일반화 성능이 떨어진 지역의 원인 분석을 담당했습니다.
+  </p>
+
   <div class="grid two">
     <div class="card">
       <h3>데이터 파이프라인</h3>
       <ul>
-        <li>Haversine 공식을 활용해 기상 관측소와 대기질 측정소를 지리적으로 매핑</li>
-        <li>ASOS와 AirKorea 데이터를 시공간 기준으로 병합</li>
-        <li>선형 보간과 인접 관측소 대체를 결합한 계층적 결측치 처리 로직 구현</li>
+        <li>Haversine 공식을 활용해 기상 관측소와 대기질 측정소를 지리적으로 매핑했습니다.</li>
+        <li>ASOS 기상 데이터와 AirKorea 대기질 데이터를 시공간 기준으로 병합했습니다.</li>
       </ul>
     </div>
+
     <div class="card">
       <h3>모델링과 검증</h3>
       <ul>
-        <li>SMOTE와 CTGAN을 순차적으로 적용하는 데이터 증강 전략 설계</li>
-        <li>XGBoost, LightGBM, ResNet-like, FT-Transformer, DeepGBM 모델 구축</li>
-        <li>Bayesian Optimization과 Soft-Voting 앙상블 구조로 최종 성능 검증</li>
+        <li>SMOTE와 CTGAN의 데이터 증강 성능을 비교하여 증강 모델을 선별하는 전략을 설계했습니다.</li>
+        <li>XGBoost, LightGBM, ResNet-like, FT-Transformer, DeepGBM 모델을 구축했습니다.</li>
       </ul>
     </div>
+  </div>
+
+  <div class="card key-contribution-card">
+    <div class="kicker">Key Contribution</div>
+    <h3>성능 하락 지역의 원인 규명</h3>
+    <p>
+      단순히 평균 성능이 개선됐다는 결과에서 끝내지 않고,
+      Validation 성능 대비 Test 성능의 하락 폭이 유독 크게 나타난 지역을 따로 확인했습니다.
+      이후 SHAP Value와 Wasserstein Distance를 활용해 어떤 변수와 분포 변화가 일반화 성능 저하에 영향을 주었는지 분석했습니다.
+    </p>
+    <ul>
+      <li>SHAP Value를 활용해 지역별 예측에 중요한 변수를 선별했습니다.</li>
+      <li>Wasserstein Distance로 연도별 데이터 분포 변화를 정량적으로 비교했습니다.</li>
+    </ul>
   </div>
 </section>
 
@@ -96,10 +114,7 @@
   <h2>성능 하락을 어떻게 해석했는가</h2>
   <div class="card">
     <p>
-      모든 지역에서 성능이 오른 것은 아니었습니다. 한 지역에서는 CSI가 0.3820에서 0.3521로 약 8% 하락했습니다.
-      이 결과를 단순 실패로 처리하지 않고, Validation과 Test 성능의 괴리를 확인한 뒤
-      Shapley Value와 Wasserstein Distance로 연도별 시정 범주 데이터의 분포 변화를 분석했습니다.
-      이 경험은 모델 성능 수치보다 성능이 달라진 이유를 설명하는 능력이 중요하다는 점을 보여줍니다.
+      각 모델의 SHAP value 상위 변수들의 Wasserstein Distance를 비교한 결과, 성능이 하락한 지역의 정상시정 범주의 변수 분포가 TEST 연도 데이터에서 크게 변화했음을 포착했습니다. 이 결과를 바탕으로 해당 연도, 해당 지역의 기상관측장비 재원을 문의한 결과, 동일한 지역과 연도에서 장비의 교체가 진행되었음을 확인할 수 있었습니다. 따라서, 특정 지역의 성능 하락이 모델 자체의 실패라기보다, 시정 범주 데이터의 분포 변화와 관련되어 있음을 규명했고, 추후 모델링 성능의 향상을 위해, 동일한 장비로 측정한 데이터의 축적이 필요하다는 시사점을 도출했습니다.
     </p>
   </div>
 </section>

@@ -395,7 +395,7 @@ hr {
 
 .profile-main h1 {
   margin: 0 0 8px;
-  font-size: clamp(2.8rem, 7vw, 5.8rem);
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
   line-height: 1;
   letter-spacing: -0.07em;
 }
@@ -403,8 +403,8 @@ hr {
 .profile-role {
   margin: 0 0 22px;
   color: var(--accent);
-  font-size: clamp(1.15rem, 2vw, 1.45rem);
-  font-weight: 800;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  font-weight: 750;
   letter-spacing: -0.02em;
 }
 
@@ -565,7 +565,7 @@ hr {
 
 /* 소개 블럭이 너무 위에 붙지 않도록 약간의 안정적인 내부 여백 */
 .profile-main {
-  padding-top: clamp(34px, 5vw, 56px);
+  padding-top: clamp(23px, 3vw, 36px);
 }
 
 /* 태블릿 이하에서는 세로 배치 */
@@ -665,4 +665,68 @@ hr {
   height: 24px;
   flex: 0 0 auto;
   background: rgba(148, 163, 184, 0.55);
+}
+
+/* Channels 링크 사이 구분선 */
+.profile-contact-box .channel-links.channel-links-piped {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 6px !important;
+  margin-top: 10px;
+}
+
+.profile-contact-box .channel-links-piped .profile-link-button {
+  flex: 0 0 auto;
+}
+
+.channel-pipe {
+  color: rgba(148, 163, 184, 0.7);
+  font-weight: 800;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 420px) {
+  .profile-contact-box .channel-links.channel-links-piped {
+    flex-wrap: wrap !important;
+  }
+
+  .channel-pipe {
+    display: none;
+  }
+}
+
+/* 이름 위 직무 라벨 */
+.profile-main .profile-role-top {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: clamp(1.05rem, 1.8vw, 1.32rem);
+  font-weight: 850;
+  letter-spacing: -0.01em;
+}
+
+.profile-main h1 {
+  margin: 0 0 22px;
+}
+
+/* Visibility project - key contribution card */
+.key-contribution-card {
+  margin-top: 18px;
+  border-color: rgba(56, 189, 248, 0.34);
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.13), transparent 24rem),
+    rgba(17, 24, 39, 0.82);
+}
+
+.key-contribution-card h3 {
+  font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+}
+
+.key-contribution-card p {
+  color: var(--muted);
+}
+
+.key-contribution-card ul {
+  margin-bottom: 0;
 }
