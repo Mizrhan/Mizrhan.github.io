@@ -730,3 +730,53 @@ hr {
 .key-contribution-card ul {
   margin-bottom: 0;
 }
+
+/* Tableau dashboard embed */
+.dashboard-card {
+  padding: 16px;
+  overflow: hidden;
+}
+
+.tableau-embed-wrap {
+  width: 100%;
+  min-height: 760px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tableau-embed-wrap tableau-viz {
+  display: block;
+  width: 100%;
+  height: 760px;
+}
+
+.dashboard-actions {
+  margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+  .tableau-embed-wrap {
+    min-height: 680px;
+  }
+
+  .tableau-embed-wrap tableau-viz {
+    height: 680px;
+  }
+}
+
+@media (max-width: 620px) {
+  .dashboard-card {
+    padding: 12px;
+  }
+
+  .tableau-embed-wrap {
+    min-height: 620px;
+    border-radius: 14px;
+  }
+
+  .tableau-embed-wrap tableau-viz {
+    height: 620px;
+  }
+}
