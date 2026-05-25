@@ -780,3 +780,29 @@ hr {
     height: 620px;
   }
 }
+
+/* Publication card */
+.publication-card {
+  border-color: rgba(56, 189, 248, 0.36);
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.13), transparent 24rem),
+    rgba(17, 24, 39, 0.84);
+}
+
+.publication-card h3 {
+  max-width: 900px;
+  font-size: clamp(1.25rem, 2.3vw, 1.7rem);
+}
+
+.publication-card table {
+  margin-top: 20px;
+}
+
+.publication-card .cta-row {
+  margin-top: 22px;
+}
+
+.card strong {
+  color: var(--white);
+  font-weight: 850;
+}
