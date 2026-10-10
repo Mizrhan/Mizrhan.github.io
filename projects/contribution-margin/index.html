@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>제품별 공헌이익 자동화 파이프라인 | 이찬식 Portfolio</title>
+  <meta name="description" content="이찬식 데이터 분석가 포트폴리오">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    /* 공용 style.css 에 없는 요소만 이 페이지 안에서 보완한다 (변수는 공용 것을 그대로 쓴다) */
+    .page pre{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+      padding:16px 18px;margin:16px 0;overflow-x:auto;font-size:13px;line-height:1.7;
+      font-family:Consolas,'Cascadia Mono',ui-monospace,monospace;color:var(--muted)}
+    .page code{background:var(--panel-strong);padding:1px 5px;border-radius:4px;font-size:.92em}
+    .page pre code{background:none;padding:0}
+    .page blockquote{margin:18px 0;padding:14px 18px;background:var(--panel);
+      border-left:3px solid var(--accent);border-radius:0 8px 8px 0}
+    .page blockquote p{margin:0}
+    .page .card h4{margin:18px 0 6px;font-size:1rem}
+    .page .card h4:first-child{margin-top:0}
+    /* 2열 key-value 표는 공용 CSS 의 min-width:720px 를 풀어 좁은 화면에서도 그대로 읽히게 한다 */
+    .page table.kv{min-width:0}
+    .page table.kv td:first-child{white-space:nowrap;width:1%}
+    @media (max-width:620px){
+      .page pre{font-size:11.5px;padding:12px 14px}
+      .page table.kv{font-size:.9rem}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="../../index.html">이찬식</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="../../index.html">Home</a>
+        <a href="../../projects/index.html">Projects</a>
+        <a href="../../about/index.html">About</a>
+        <a href="../../resume/index.html">Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <div class="eyebrow">DuckDB and Streamlit</div>
+      <h1 class="project-title">제품별 공헌이익 자동화 파이프라인</h1>
+      <p>엑셀 수기 집계로 신제품 2종만 보던 공헌이익을, 전 품목을 배치 한 번으로 산출하는 데이터 파이프라인으로 옮긴 작업입니다. 금액은 전부 지수와 비율로 치환했고, 제품명과 채널명은 익명 라벨입니다.</p>
+      <div class="project-meta">
+        <span class="tag">Python</span><span class="tag">DuckDB</span><span class="tag">SQL</span>
+        <span class="tag">Streamlit</span><span class="tag">Plotly</span><span class="tag">Data Quality</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>범위 — 확인받은 것과 미리 만들어 둔 것</h2>
+      <div class="card">
+        <p>먼저 밝혀 둡니다. 이 작업은 두 층으로 되어 있고, <strong>성격이 다릅니다.</strong></p>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>무엇</th><th>상태</th></tr></thead>
+          <tbody>
+            <tr><td>①</td><td>광고 원천에서 제품 · 라인을 읽어내고, <strong>못 읽은 건을 원천 담당 팀에 알리는 것</strong></td>
+                <td><strong>업무로 확인받은 범위.</strong> 결과가 실제로 쓰였습니다</td></tr>
+            <tr><td>②</td><td>그 위에 올린 CM 산출과 대시보드</td>
+                <td><strong>다음 단계를 위해 미리 만들어 둔 것.</strong> 지시받은 일이 아닙니다</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p>문서도 그 경계로 나뉩니다. <strong>원천 정형화 · 매핑 매뉴얼</strong>은 원천을 손보는 담당 팀에게 주는 문서로, 「배부(비용을 품목에 나누는 일)는 범위 밖이다 — 판정까지만 적는다」라고 문서 안에 못박아 뒀습니다. 이게 ① 입니다. <strong>CM 자동화 매뉴얼</strong>은 판정부터 배부 · 산출 · 검증 · 대시보드까지 담은 파이프라인 정본으로, ①과 ②를 합친 전체입니다.</p>
+        <p><strong>①이 이 작업의 본체입니다.</strong> ②를 미리 만든 이유는 아래에 적었습니다. 미매핑이 정리되기 전의 CM 숫자는 쓸 수 없고, 정리되고 나면 곧바로 필요해지기 때문입니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>개요</h2>
+      <div class="card">
+<pre>raw_data (광고 원천 6종 + 회계 원장)  →  DuckDB  →  검증 자료 (통합 + 원천별 6권)
+                                             └→  대시보드 (Streamlit · 자립형 HTML)</pre>
+        <div class="table-wrap">
+        <table class="kv">
+          <tr><td>기간</td><td>18개월 (원장은 1개월 더 적재)</td></tr>
+          <tr><td>대상</td><td>원장 품목 33종 · 광고 원천 6</td></tr>
+          <tr><td>처리량</td><td>원장 7만 행 · 마케팅 16만 행 규모</td></tr>
+          <tr><td>갱신</td><td>파일 교체 후 배치 1회 — 데이터 70초 · 검증 자료까지 3분</td></tr>
+        </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>문제 — 제품 정보가 자연어로만 있습니다</h2>
+      <div class="card">
+<pre>CM = 매출 − 매출원가 − 마케팅 − 판매수수료 − 물류비</pre>
+        <p>매출과 매출원가는 회계 원장에 제품 태그가 붙어 있어 그대로 씁니다. 문제는 나머지 셋입니다. <strong>판매수수료 · 물류비</strong>는 원장에 제품 태그가 없어 Region · Channel 단위로만 집계됩니다. <strong>마케팅</strong>은 광고 플랫폼 데이터에 제품 정보가 자연어로만 있습니다.</p>
+        <p>원천이 여섯인데, 어려운 쪽은 플랫폼이 무엇이냐가 아니라 <strong>제품을 알려 주는 텍스트가 제각각</strong>이라는 점입니다.</p>
+        <div class="table-wrap">
+        <table class="kv">
+          <thead><tr><th>라벨</th><th>판정에 쓰는 텍스트</th></tr></thead>
+          <tbody>
+            <tr><td>채널 A</td><td>상품코드 → 마스터 조회 → 제품명</td></tr>
+            <tr><td>채널 B</td><td>리포트가 미리 묶어 준 버킷 이름</td></tr>
+            <tr><td>채널 C</td><td>광고그룹명 → 캠페인명 → 제품명 (셋을 순서대로)</td></tr>
+            <tr><td>채널 D · E</td><td>제품명 (영문, 쉼표로 여러 개)</td></tr>
+            <tr><td>채널 F</td><td>자유 서술 제목 — 정해진 형식이 없음</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p>기존에는 이걸 <strong>엑셀 시트 29장에 걸친 수기 피벗</strong>으로 처리했고, 신제품 2종만 대상이었습니다. 매월 며칠이 걸렸고 다른 품목으로 넓힐 수 없었습니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>먼저 기존 결과를 완전히 재현했습니다</h2>
+      <div class="card">
+        <p>새로 만들기 전에 <strong>엑셀이 내던 숫자를 원 단위까지 재현</strong>하는 것을 선행 조건으로 잡았습니다. 재현이 안 되면 이후 모든 숫자를 신뢰할 근거가 없습니다.</p>
+        <div class="table-wrap">
+        <table class="kv">
+          <thead><tr><th>검증 항목</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr><td>원장 6개월 합계</td><td>원 단위 일치</td></tr>
+            <tr><td>마케팅 6채널 × 6개월</td><td>전 구간 차이 0</td></tr>
+            <tr><td>신제품 2종 CM</td><td>원 단위 일치</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p>재현 과정에서 원천의 파싱 규칙을 역산해야 했습니다. 한 원천의 환율 적용 규칙은 문서화된 것이 없어, 기존 결과 1,257행을 전수 대조하며 규칙을 복원했습니다.</p>
+        <p>이때 <strong>한 통화 조합이 상식과 어긋났습니다.</strong> 처음엔 오타를 의심했지만 586행 전수 대조에서 예외 없이 일치해, 오타가 아니라 기존 운영 방식이라고 보고 그대로 따랐습니다. <strong>이 판단이 나중에 틀린 것으로 드러납니다.</strong></p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>규칙을 코드에서 데이터로 옮겼습니다</h2>
+      <div class="card">
+        <p>가장 중요한 구조 변경입니다. 제품 매핑 사전이 파이썬 코드 안에 하드코딩되어 있었습니다.</p>
+<pre>PRODUCT_DIC = [
+    ('제품A', ['○○패치', 'xxxpatch', 'xxxpatches']),
+    ...
+]</pre>
+        <p>이러면 <strong>신제품이 나올 때마다 개발자를 거쳐야 합니다.</strong> 실무자가 직접 고칠 수 있어야 자동화입니다. 엑셀 한 장으로 빼고, 파이프라인이 그것을 읽도록 바꿨습니다.</p>
+<pre>순서 | 구분 | 대상 | 조건 | 값 | 탐지 토큰 | 채널 | 비고</pre>
+        <p><code>구분</code> 열 하나로 품목 · 라인 · 연결 · 명칭통합 · 번들 · 정제어 · 예외 · 비용성격을 모두 담습니다. <strong>교체 후 원천 텍스트 491개를 전수 대조해 결과가 동일함을 확인</strong>했습니다. 지금 사전은 127행이고, 실무자가 직접 편집합니다.</p>
+
+        <h4>조인 키를 (제품, 라인) 쌍으로 설계했습니다</h4>
+        <p>마케팅이 뱉는 제품명과 원장의 품목 코드는 이름 체계가 다릅니다. 문자열로 조인하면 상당액이 <strong>조용히 0으로 떨어집니다.</strong> 에러도 나지 않습니다. 더 까다로운 건 같은 제품명이 라인에 따라 다른 품목으로 가야 하는 경우입니다.</p>
+<pre>제품C + 라인X   →  품목「제품C(라인X 전용)」
+제품C + (그 외)  →  품목「제품C」</pre>
+        <p>그래서 연결표의 키를 (제품, 라인)으로 두고, 라인 조건이 있는 규칙을 먼저 적용하고 없으면 공란 규칙이 받도록 했습니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>핵심 판단 — 미매핑 광고비를 안분하지 않았습니다</h2>
+      <div class="card">
+        <p>광고 텍스트에서 제품을 못 읽은 금액이 <strong>전체 광고비의 25.2%</strong>였습니다. 이걸 매핑된 광고비 비중대로 나누는 로직을 만들었습니다. 총액이 맞아떨어지고 품목별 CM이 완전해 보입니다. <strong>그리고 쓰지 않기로 했습니다.</strong></p>
+        <p>비중 배분은 「미매핑분의 제품 구성이 매핑분과 같다」는 가정에 서 있습니다. 그런데 매핑률은 제품라인마다 다릅니다. SKU 관리가 잘 된 라인은 잘 붙고, 안 된 라인은 안 붙습니다. <strong>매핑 실패가 무작위가 아니라 라인과 상관되어 있습니다.</strong> 이 상태에서 비중을 같다고 두면 매핑이 잘 안 되는 라인이 조직적으로 과소 배분됩니다.</p>
+        <p>영향은 작지 않았습니다. 안분하면 <strong>한 품목이 흑자에서 적자로 뒤집힙니다.</strong> 그 뒤집힘의 근거가 성립하지 않는 가정이라면, 뒤집지 않는 편이 낫다고 판단했습니다.</p>
+        <p>대신 <strong>CM이 후하게 나온다는 사실을 화면에 남겼습니다.</strong> 미귀속 금액이 상시 표시되고, 검증 자료에 미매핑 건이 전수로 실립니다. 로직은 뷰로 살려두고 매뉴얼에 한계와 함께 기록했습니다.</p>
+        <blockquote>
+          <p>숨기지 않는 쪽이 검증 가능합니다. <strong>「40%는 못 붙였고 이게 그 목록입니다」가 「다 붙였습니다」보다 신뢰를 만듭니다.</strong></p>
+        </blockquote>
+        <p>같은 이유로 원장의 전사 원가 조정 항목도 배부하지 않았습니다. 배부 규칙을 찾으려 요율을 역산해 보니 첫 해는 정액, 이듬해는 정률, 그리고 어느 달부터 요율이 한 번 더 바뀌었습니다. 기준이 최소 두 번 바뀐 항목입니다. 그래서 「미귀속」으로 분리하고 결과에 <code>kind</code> 열을 뒀습니다.</p>
+<pre>품목 CM        ← 품목별 손익은 이것만 씁니다
+미귀속          미배부 광고비 · 원가조정
+전체           ← 원장과 맞물립니다</pre>
+        <p><strong>합계가 안 맞는 게 아니라, 안 맞는 부분에 이름을 붙여 둔 것</strong>입니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>검증 자료를 「틀린 곳을 찾으라고」 냈습니다 — ①의 본체</h2>
+      <div class="card">
+        <p>여기가 업무로 확인받은 범위이자 <strong>실제로 결과가 나온 부분</strong>입니다.</p>
+        <p>처음엔 검증 자료를 한 권(16시트)으로 묶어 냈습니다. 받는 쪽에서 <strong>「뭘 보라는 건지 모르겠다」</strong>는 말이 나왔습니다. 원천을 손보는 사람은 자기 원천만 봅니다. 16시트를 통째로 내밀면 어디를 볼지 알 수 없습니다. 그래서 <strong>원천마다 한 권씩</strong> 같은 계층으로 다시 만들었습니다.</p>
+<pre>요약 → {판정축}별_현황 → 매핑_로직 → 매핑_사전 → raw_정형화 → raw</pre>
+        <p>핵심은 <strong>요약 시트 안에 미매핑 건을 원문 단위로 전부 적은 것</strong>입니다. 사유별 집계는 「얼마나 안 붙었나」까지만 말해 줍니다. 받는 사람이 알고 싶은 건 <strong>「어느 건인가」</strong>입니다. 판정 근거도 한 줄로 보이게 했습니다.</p>
+<pre>원문      (상품코드)
+판정원문   (제품 마스터가 반환한 정식 제품명)
+근거      master에서 제품명 조회 · 단일
+결과      제품B / 라인X</pre>
+        <p>원문만 봐서는 왜 그 제품인지 알 수 없습니다. <strong>무엇을 근거로 읽었는지가 보여야</strong> 남이 검사할 수 있습니다.</p>
+        <blockquote>
+          <p><strong>결과</strong> — 원천별 자료를 돌리자 각 팀이 자기 원천의 미매핑을 직접 확인해 줬고, <strong>가장 큰 원천의 미매핑률이 41% → 15% 로 떨어졌습니다.</strong></p>
+        </blockquote>
+        <p>한 가지 배운 게 있습니다. 이 요약 표를 처음엔 손으로 넣었다가 다음 갱신 때 지워졌습니다. <strong>생성기가 만들게 옮겼습니다.</strong> 문서에 손으로 넣은 것은 반드시 사라집니다.</p>
+
+        <h4>원천 그대로와 우리가 손댄 것을 갈랐습니다</h4>
+        <p>raw라고 이름 붙인 시트가 사실은 raw가 아니었습니다. 여러 시트를 한 모양으로 모으고, 통화를 환산하고, 열 이름을 통일한 <strong>이미 우리가 손댄 결과</strong>였습니다.</p>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>시트</th><th>무엇</th><th>왜</th></tr></thead>
+          <tbody>
+            <tr><td><code>raw</code></td><td>원천 파일의 그 시트를 값 그대로. 머리글 행도 안 자름</td><td>「원천이 진짜 이렇게 생겼나」</td></tr>
+            <tr><td><code>raw_정형화</code></td><td>DB 적재분을 행 그대로</td><td>「그걸 우리가 어떤 모양으로 폈나」</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p>그리고 <code>raw_정형화</code>에서 판정 결과 두 열(제품 · 라인)을 <strong>뺐습니다.</strong> 원천에 없던 값이고 우리가 붙인 파생변수라, 원천 계열 시트에 섞이면 「원천이 이렇다」와 「우리가 이렇게 봤다」의 경계가 흐려집니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>조용히 틀리는 것을 찾는 장치</h2>
+      <div class="card">
+        <h4>없는 조합이 만들어졌다는 것 자체가 신호</h4>
+        <p>사전이 틀려도 예외가 발생하지 않습니다. <strong>그럴듯한 제품으로 조용히 들어갑니다.</strong> 착안점은 이것이었습니다. 마케팅이 만들어내는 (품목, 라인) 조합이 원장에 실재하는가?</p>
+<pre>WITH led AS (SELECT DISTINCT sku_std sg, product_big pb FROM stg_actual
+             WHERE product_big &lt;&gt; ''),
+     mk  AS (SELECT sku_std sg, line, sum(amt) amt FROM fct_marketing_sku
+             WHERE sku_std NOT IN ('매핑불가','기타') GROUP BY 1,2)
+SELECT * FROM mk LEFT JOIN led USING (sg)
+WHERE led.pb IS NULL ORDER BY amt DESC</pre>
+        <p>이걸로 <strong>라벨링 오류 두 건</strong>을 찾았습니다. 한 품목에는 그 라인이 없고, 다른 품목에는 그 라인 자체가 없었습니다. 교정 후 한 신제품의 마케팅비가 실제 규모로 드러났습니다. 교정 전에는 광고비의 절반이 다른 품목에 붙어 있어 <strong>실제보다 나아 보였습니다.</strong></p>
+
+        <h4>그 밖에 발견해 보고한 것</h4>
+        <ul>
+          <li><strong>엑셀 수식이 환율표 범위 밖을 공란 처리</strong> — 한 달치 광고비가 통째로 0원 계상되고 있었음</li>
+          <li><strong>마스터 시트의 수식이 공란일 때 문자열 <code>0</code>을 반환</strong> — 제품명으로 오독하면 다수 SKU가 오염됨</li>
+          <li><strong>광고비는 집행됐는데 매출이 0인 품목</strong> — 출시 지연 또는 코드 불일치</li>
+          <li><strong>마스터의 열 이름이 「기존/신규」</strong> — 시간 순서를 뜻하는 말이라 무엇을 보고 붙였는지를 알려 주지 못했습니다. 실제로는 조회 경로가 다른 두 값이었습니다</li>
+          <li><strong>미매핑에 성격이 다른 비용이 섞여 있음</strong> — 한 원천은 품목이 안 붙는 것이 정상인 비용이 대부분이었습니다. 그걸 미매핑으로 세우니 미매핑률이 96%가 되고, 정작 담당 팀에 물어봐야 할 건이 그 안에 묻혀 있었습니다</li>
+        </ul>
+
+        <h4>파서를 두 번 짜면 두 번째가 틀립니다</h4>
+        <p>「우리가 읽은 것이 원천과 같나」를 확인하려고, 처음엔 적재가 끝난 뒤 원천 파일을 <strong>다시 읽어</strong> 세는 코드를 짰습니다. 그러다 두 번 오진했습니다. 틀린 건 파이프라인이 아니라 <strong>두 번째로 짠 파서</strong>였습니다. 대조를 적재 루프 안으로 옮겼습니다. 읽으면서 세고, 버릴 때마다 사유와 함께 장부에 적습니다. 어긋나면 그 자리에서 멈춥니다. <strong>틀린 숫자로 화면까지 가는 것이 최악</strong>이기 때문입니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>매월 안 깨지게</h2>
+      <div class="card">
+        <p><strong>파일 · 시트를 패턴으로 찾습니다.</strong> 원천 파일명과 시트명에 월이 박혀 있어 다음 달 파일로 갈아끼우면 그대로 깨집니다. 패턴 탐색으로 바꾸고, 실제로 읽은 파일을 로그에 이름으로 남깁니다. 원천이 안 갈렸는데 조용히 0원으로 나오는 것이 가장 위험한 실패이기 때문입니다.</p>
+        <p><strong>원장 분류 변화를 스스로 보고합니다.</strong> 원장은 스냅샷마다 품목을 신설 · 삭제 · 통합합니다. 실제로 한 품목이 다음 스냅샷에서 다른 품목으로 접혔습니다. 모르고 지나가면 연결표가 조용히 어긋나므로, 갱신마다 직전 실행과 대조하고 신설 · 삭제가 있으면 사전을 확인하라고 띄웁니다.</p>
+        <p><strong>기간 상한으로 허수를 막습니다.</strong> 원장은 마케팅보다 한 달 먼저 옵니다. 마케팅이 없는 달을 넣으면 광고비가 부분치만 잡혀 CM이 좋게 나옵니다. 상한을 메타데이터로 못 박고 화면이 그 뒤를 못 고르게 했습니다.</p>
+        <p><strong>원천의 구조를 가정하지 않습니다.</strong> 두 원천은 한 건이 여러 줄을 씁니다. 「연속한 두 줄이 한 짝」이라고 셀 뻔했는데, 실측하니 그 가정이 틀렸습니다. 한 원천은 거의 전부 1줄이고, 다른 원천은 1줄 · 2줄 · 3줄 · 8줄이 섞여 있었습니다. 줄 수 대신 <strong>그 줄이 무엇을 들고 있는지</strong>만 보게 바꿨습니다.</p>
+        <p><strong>맨바닥에서 재현되는지 확인합니다.</strong> 폴더를 옮기면서 DB를 복사하지 않고 처음부터 다시 만들었더니, <strong>어느 스크립트에도 정의가 없는 뷰</strong>가 하나 드러났습니다. 예전에 손으로 만들어 DB 파일에만 살아 있었고, 그 파일을 계속 재사용해서 아무도 몰랐습니다. 즉 파이프라인이 맨바닥에서 재현된 적이 한 번도 없었습니다. <strong>산출물이 아니라 산출 과정</strong>이 재현되는지 확인해야 한다는 걸 여기서 배웠습니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>미리 만들어 둔 것 — ②</h2>
+      <div class="card">
+        <p>여기서부터는 지시받은 범위가 아니라 <strong>다음 단계를 위해 준비해 둔 것</strong>입니다. 미매핑이 정리되기 전의 CM 숫자는 그대로 쓸 수 없습니다. 하지만 정리되고 나면 곧바로 필요해지고, 그때 만들기 시작하면 늦습니다. 그래서 계산과 화면을 먼저 세워 두고, <strong>얼마나 후한지를 화면에 띄우는 형태</strong>로 만들었습니다.</p>
+        <p><strong>계산을 SQL 모델로 재구성했습니다.</strong> 엑셀에서는 스크립트 11개를 순서대로 돌려야 했고 중간 결과가 시트에 값으로 고정되어 있었습니다. DuckDB 뷰로 옮기니 베이스가 바뀌면 자동으로 다시 계산됩니다. 저장되는 것은 원천 테이블과 최종 마트뿐이고 중간 12개는 전부 뷰입니다.</p>
+        <p><strong>대시보드는 두 형태로 만들었습니다.</strong> 서버로 띄우는 것에 우려가 있어, 같은 화면을 <strong>파일 하나로</strong> 도는 형태로도 만들었습니다. 차트 라이브러리와 데이터를 전부 파일 안에 넣고, <code>connect-src 'none'</code> CSP로 네트워크 접속을 막았습니다. 더블클릭하면 열리고, 밖으로 아무것도 보내지 않습니다. <strong>「밖으로 안 나간다」를 문서가 아니라 브라우저가 강제하게</strong> 했습니다. 반대로 서버가 없어지면 접근 통제도 없어지므로, 상단에 그 사실을 경고로 띄웁니다.</p>
+        <p><strong>갱신과 화면이 서로 막지 않게 했습니다.</strong> DuckDB는 쓰기 하나 또는 읽기 여럿만 허용합니다. 화면이 DB 파일을 잡고 있으면 ETL이 못 씁니다. 마트를 parquet으로 내보내고 화면은 그것만 읽게 분리했습니다.</p>
+        <p><strong>화면의 숫자를 직접 되짚을 수 있게 했습니다.</strong> 광고 원문 하나가 어떤 규칙으로 쪼개져 어느 품목에 얼마 갔는지를 낱줄로 폅니다. <code>SUMIFS</code> 한 방으로 화면 값이 원 단위까지 나옵니다. 이 표가 거짓말하면 아무 의미가 없으므로, 배치가 돌 때마다 집계 마트와 자동 대사합니다.</p>
+        <blockquote>
+          <p>만드는 중에 버그를 하나 잡았습니다. <code>SELECT * EXCLUDE</code>를 <code>UNION ALL</code> 양쪽에 쓰니 컬럼이 이름이 아니라 <strong>위치로</strong> 붙어 두 열이 뒤바뀌었습니다. 2,178개 조합이 어긋났는데 <strong>합계는 정확히 맞아서</strong> 총액만 봤으면 못 잡았을 겁니다.</p>
+        </blockquote>
+        <p>전 품목으로 넓히자 신제품 시야에서는 안 보이던 비대칭이 드러났습니다. 회사가 집중해서 보던 신제품들이 전체 안에서 어느 위치인지가 처음으로 한 화면에 나왔습니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>되돌아보면</h2>
+      <div class="card">
+        <p>가장 오래 고민한 것은 알고리즘이 아니라 <strong>「모르는 것을 어떻게 다룰까」</strong>였습니다. 미매핑 광고비와 원가조정 둘 다 그럴듯한 배분 규칙을 만들 수 있었고, 만들면 숫자가 깔끔해집니다. 하지만 그 규칙이 서 있는 가정을 검증할 수 없었습니다.</p>
+        <p>배분하지 않기로 하면서 얻은 것은 <strong>틀릴 수 있는 곳이 어디인지 아는 상태</strong>입니다. 품목 CM이 후하다는 걸 알고, 얼마나 후한지 숫자로 알고, 그게 화면과 문서에 남아 있습니다.</p>
+
+        <h4>재현을 검증의 기준으로 삼을 때의 함정</h4>
+        <p>이 작업의 출발점은 「먼저 기존 결과를 완전히 재현한다」였고, 그게 신뢰의 근거였습니다. 그런데 기존 결과와 원 단위까지 맞는다는 것은 <strong>기존이 옳다는 뜻이 아니라 기존과 같다는 뜻일 뿐</strong>입니다.</p>
+        <p>앞서 적은 통화 하나가 정확히 그 함정에 빠졌습니다. 전수 대조가 맞아떨어지자 「상식과 어긋나지만 기존 운영 방식이니 그대로 둔다」고 적고 넘어갔습니다. 나중에 다시 보니 방식이 아니라 <strong>오류</strong>였습니다. 파운드 표기 금액을 유로 환율로 환산하고 있었습니다. 고치자 그 원천의 원화 환산액이 <strong>약 15.6% 늘었습니다.</strong></p>
+        <p>기록해 뒀기 때문에 나중에 다시 볼 수 있었지만, 애초에 <strong>「맞아떨어진다」와 「옳다」를 구별해서</strong> 그때 한 번 더 캐물었어야 했습니다. 지금은 그런 항목을 「의도적 차이」로 따로 찍습니다. 기대값을 새 숫자로 조용히 갈아끼우면 왜 달라졌는지가 사라지므로, 옛 기준값은 그대로 두고 차이와 사유를 나란히 남깁니다.</p>
+
+        <h4>측정 자체를 의심하는 법</h4>
+        <p>「이 규칙이 실제로 어느 원천에서 걸리나」를 재서 「한 번도 안 걸리는 규칙 27개」를 뽑았습니다. 그런데 판정 엔진을 다시 읽어 보니 <strong>규칙 종류마다 대조하는 단위가 달랐습니다.</strong> 어떤 건 원문과 통째로 같아야 하고, 어떤 건 공백을 지운 뒤 보고, 어떤 건 정규식이었습니다. 저는 그걸 하나로 뭉뚱그려 쟀고, <strong>멀쩡히 걸리는 규칙 6개를 죽은 것으로 오판했습니다.</strong> 단위를 맞추니 27개가 20개가 됐고, 실제로 지울 수 있는 건 논리적으로 도달 불가능한 1개뿐이었습니다.</p>
+        <p>그리고 그 측정을 <strong>규칙의 근거로 삼지 않기로</strong> 했습니다. 측정은 스냅샷입니다. 이번 달 한 원천에서만 걸렸다고 다음 달에도 그렇다는 보장이 없습니다. 측정은 후보를 찾고 고친 뒤 회귀를 확인하는 <strong>도구</strong>지, 규칙의 근거가 아닙니다.</p>
+        <p>마지막으로 <strong>규칙은 한 군데에만 두어야 합니다.</strong> 검증 자료를 만드는 스크립트가 둘로 갈리면서 같은 규칙이 두 곳에 생겼고, 한쪽만 고쳐진 채 한동안 어긋나 있었습니다. 공용 모듈 하나로 합쳤습니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>기술적으로 다뤄야 했던 것</h2>
+      <div class="card">
+        <h4>대용량 엑셀 읽기</h4>
+        <p>openpyxl이 15만 행 규모 워크북에서 실용적이지 않아, <code>zipfile</code> + <code>ET.iterparse</code> 기반 스트리밍 리더를 직접 만들었습니다. 읽기에 10초입니다.</p>
+        <h4>DuckDB 벌크 적재</h4>
+        <p><code>executemany</code>가 수 분 걸립니다. pandas DataFrame을 <code>register</code> → <code>CREATE TABLE AS SELECT</code>로 바꿔 초 단위로 줄였습니다.</p>
+        <h4>병렬 표기 분해를 SQL로</h4>
+        <p>광고 하나가 여러 제품을 담는 경우의 분배 규칙입니다. 라인이 매핑불가인 건은 같은 (지역, 채널, 제품)의 다른 라인들에 <strong>균등 분배</strong>합니다. 개수로 나누지 비중으로 나누지 않습니다. 비중으로 나누면 앞에서 피한 함정에 그대로 빠집니다.</p>
+        <h4>엑셀 도형으로 프로세스 맵 그리기</h4>
+        <p>꺾인 커넥터로 그렸더니 도형이 늘면서 선이 엉켰습니다. <code>RerouteConnections()</code>가 지정한 연결점을 버리기 때문입니다. 커넥터를 버리고 좌표로 직선을 긋고, 단계 도형을 세로로 길게 두어 여섯 줄이 각자 제 높이에서 수평으로 드나들게 했습니다.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <strong>이찬식</strong>
+        <p class="small">Data Analyst Portfolio</p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:pouljone@naver.com">Email</a>
+        <a href="https://github.com/Mizrhan">GitHub</a>
+        <a href="https://huggingface.co/Mizrhan">Hugging Face</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
